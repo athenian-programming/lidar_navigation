@@ -1,0 +1,5 @@
+<launch>
+    <node name="lidar_navigation" pkg="lidar_navigation" type="lidar_navigation.py"/>
+
+    <node name="lidar_teleop" pkg="lidar_navigation" type="lidar_teleop.py"/>
+</launch>
