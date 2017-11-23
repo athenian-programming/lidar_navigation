@@ -39,7 +39,7 @@ Launch the lidar navigation nodes with:
 ```bash
 $ rosrun lidar_navigation geometry_node.py
 $ rosrun lidar_navigation teleop_node.py
-$ rosrun lidar_navigation image_node.py
+$ rosrun lidar_navigation image_node.py --plot_all
 ```
 
 To stop a crashed robot, open keyboard teleop control node with: 
@@ -66,6 +66,7 @@ sending values to */cmd_vel* will cause problems.
 | --publish_pc     | Publish point cloud values                         | false          |
 | --pc_topic       | PointCloud2 values topic name                      | /pc2           |
 | --verbose        | Enable debugging info                              | false          |
+| -h, --help       | Summary of options                                 |                |
 
 ### teleop_node.py 
 
@@ -77,6 +78,7 @@ sending values to */cmd_vel* will cause problems.
 | --publish_rate   | Publish rate                                       | 30             |
 | --centroid_topic | Centroid Point value topic name                    | /centroid      |
 | --verbose        | Enable debugging info                              | false          |
+| -h, --help       | Summary of options                                 |                |
 
 ### image_node.py 
 
@@ -89,6 +91,7 @@ sending values to */cmd_vel* will cause problems.
 | --plot_mult      | Maximum plot multiplier                            | 1.05           |
 | --contour_topic  | InnerContour value topic name                      | /contour       |
 | --verbose        | Enable debugging info                              | false          |
+| -h, --help       | Summary of options                                 |                |
 
 ## RViz
 
