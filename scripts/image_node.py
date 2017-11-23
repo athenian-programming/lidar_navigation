@@ -10,6 +10,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 from threading import Lock
+from threading import Thread
 
 import rospy
 import time
@@ -48,6 +49,7 @@ class LidarImage(object):
         self.__slice_size = None
         self.__centroid = None
         self.__data_available = False
+        self.__stopped = False
 
         rospy.loginfo("Subscribing to InnerContour topic: {}".format(contour_topic))
         self.__contour_sub = rospy.Subscriber(contour_topic, InnerContour, self.on_contour)
@@ -63,7 +65,7 @@ class LidarImage(object):
             self.__data_available = True
 
     def generate_image(self):
-        while True:
+        while not self.__stopped:
             if not self.__data_available:
                 time.sleep(0.1)
                 continue
@@ -111,7 +113,8 @@ class LidarImage(object):
 
             # Plot axis
             plt.axis(
-                [(-1 * max_dist) * self.__plot_mult, max_dist * self.__plot_mult, - 0.05, max_dist * self.__plot_mult])
+                [(-1 * max_dist) * self.__plot_mult, max_dist * self.__plot_mult, - 0.05,
+                 max_dist * self.__plot_mult])
 
             if self.__image_server is not None:
                 sio = cStringIO.StringIO()
@@ -124,6 +127,9 @@ class LidarImage(object):
             # Close resources
             plt.close()
 
+    def stop(self):
+        self.__stopped = True
+
 
 if __name__ == '__main__':
     # Parse CLI args
@@ -133,6 +139,7 @@ if __name__ == '__main__':
                           cli.plot_slices,
                           cli.plot_mult,
                           cli.contour_topic,
+                          ImageServer.args,
                           cli.log_level)
 
     # Setup logging
@@ -145,20 +152,24 @@ if __name__ == '__main__':
                                http_delay_secs=args[HTTP_DELAY_SECS],
                                http_verbose=args[HTTP_VERBOSE])
 
+    image_server.start()
+    image = LidarImage(image_server=image_server,
+                       plot_all=args[PLOT_ALL],
+                       plot_points=args[PLOT_POINTS],
+                       plot_contour=args[PLOT_CONTOUR],
+                       plot_slices=args[PLOT_SLICES],
+                       plot_mult=args[PLOT_MULT])
+
     rospy.loginfo("Running")
 
     try:
-        image_server.start()
-        image = LidarImage(image_server=image_server,
-                           plot_all=args[PLOT_ALL],
-                           plot_points=args[PLOT_POINTS],
-                           plot_contour=args[PLOT_CONTOUR],
-                           plot_slices=args[PLOT_SLICES],
-                           plot_mult=args[PLOT_MULT])
-        image.generate_image()
+        # Running this in a thread will enable ctrl-C exits
+        Thread(target=image.generate_image).start()
+        rospy.spin()
     except KeyboardInterrupt:
         pass
     finally:
+        image.stop()
         image_server.stop()
 
     rospy.loginfo("Exiting")

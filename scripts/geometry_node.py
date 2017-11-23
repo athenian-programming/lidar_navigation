@@ -2,6 +2,7 @@
 
 import time
 from threading import Lock
+from threading import Thread
 
 import numpy as np
 import rospy
@@ -45,6 +46,7 @@ class LidarGeometry(object):
         self.__nearest_points = []
         self.__max_dist = None
         self.__data_available = False
+        self.__stopped = False
 
         # Create Slices once and reset them on each iteration
         self.__slices = [Slice(v, v + self.__slice_size) for v in range(0, 180, self.__slice_size)]
@@ -101,39 +103,47 @@ class LidarGeometry(object):
             self.__data_available = True
 
     def eval_points(self):
-        while True:
-            if not self.__data_available:
-                time.sleep(0.1)
-                continue
+        try:
+            while not self.__stopped:
+                if not self.__data_available:
+                    time.sleep(0.1)
+                    continue
 
-            with self.__vals_lock:
-                max_dist = self.__max_dist
-                all_points = self.__all_points
-                nearest_points = self.__nearest_points
-                self.__all_points = []
-                self.__data_available = False
+                with self.__vals_lock:
+                    max_dist = self.__max_dist
+                    all_points = self.__all_points
+                    nearest_points = self.__nearest_points
+                    self.__all_points = []
+                    self.__data_available = False
 
-            # Perform these outside of lock to prevent blocking on scan readings
-            # Calculate inner contour and centroid
-            nearest_with_origin = [Origin] + nearest_points + [Origin]
-            icx = [p.x for p in nearest_with_origin]
-            icy = [p.y for p in nearest_with_origin]
-            polygon = Polygon(zip(icx, icy))
-            poly_centroid = polygon.centroid
+                # Perform these outside of lock to prevent blocking on scan readings
+                # Calculate inner contour and centroid
+                nearest_with_origin = [Origin] + nearest_points + [Origin]
+                icx = [p.x for p in nearest_with_origin]
+                icy = [p.y for p in nearest_with_origin]
+                polygon = Polygon(zip(icx, icy))
+                poly_centroid = polygon.centroid
 
-            # Convert to msgs
-            ic = InnerContour()
-            ic.max_dist = max_dist
-            ic.slice_size = self.__slice_size
-            ic.all_points = np.asarray([p.to_ros_point() for p in all_points])
-            ic.nearest_points = np.asarray([p.to_ros_point() for p in nearest_points])
-            ic.centroid = Point2D(poly_centroid.x, poly_centroid.y).to_ros_point()
+                # Convert to msgs
+                ic = InnerContour()
+                ic.max_dist = max_dist
+                ic.slice_size = self.__slice_size
+                ic.all_points = np.asarray([p.to_ros_point() for p in all_points])
+                ic.nearest_points = np.asarray([p.to_ros_point() for p in nearest_points])
+                ic.centroid = Point2D(poly_centroid.x, poly_centroid.y).to_ros_point()
 
-            # Publish centroid and contour
-            self.__centroid_pub.publish(ic.centroid)
-            self.__contour_pub.publish(ic)
+                # Publish centroid and contour
+                self.__centroid_pub.publish(ic.centroid)
+                self.__contour_pub.publish(ic)
 
-            self.__rate.sleep()
+                self.__rate.sleep()
+
+        except KeyboardInterrupt:
+            # This will prevent callstack dump on exit with ctrl-C
+            pass
+
+    def stop(self):
+        self.__stopped = True
 
 
 if __name__ == '__main__':
@@ -153,19 +163,24 @@ if __name__ == '__main__':
 
     rospy.init_node('geometry_node')
 
+    geometry = LidarGeometry(slice_size=args[SLICE_SIZE],
+                             max_mult=args[MAX_MULT],
+                             publish_rate=args[PUBLISH_RATE],
+                             publish_pc=args[PUBLISH_PC],
+                             scan_topic=args[SCAN_TOPIC],
+                             contour_topic=args[CONTOUR_TOPIC],
+                             centroid_topic=args[CENTROID_TOPIC],
+                             pc_topic=args[PC_TOPIC])
+
     rospy.loginfo("Running")
 
     try:
-        geometry = LidarGeometry(slice_size=args[SLICE_SIZE],
-                                 max_mult=args[MAX_MULT],
-                                 publish_rate=args[PUBLISH_RATE],
-                                 publish_pc=args[PUBLISH_PC],
-                                 scan_topic=args[SCAN_TOPIC],
-                                 contour_topic=args[CONTOUR_TOPIC],
-                                 centroid_topic=args[CENTROID_TOPIC],
-                                 pc_topic=args[PC_TOPIC])
-        geometry.eval_points()
+        # Running this in a thread will enable ctrl-C exits
+        Thread(target=geometry.eval_points).start()
+        rospy.spin()
     except KeyboardInterrupt:
         pass
+    finally:
+        geometry.stop()
 
     rospy.loginfo("Exiting")

@@ -2,6 +2,7 @@
 
 import time
 from threading import Lock
+from threading import Thread
 
 import rospy
 from geometry_msgs.msg import Point
@@ -33,6 +34,7 @@ class LidarTeleop(object):
         self.__curr_vals_lock = Lock()
         self.__curr_centroid = None
         self.__data_available = False
+        self.__stopped = False
 
         rospy.loginfo("Publishing Twist vals to topic: {}".format(vel_topic))
         self.__vel_pub = rospy.Publisher(vel_topic, Twist, queue_size=5)
@@ -47,7 +49,7 @@ class LidarTeleop(object):
 
     def perform_teleop(self):
         try:
-            while True:
+            while not self.__stopped:
                 if not self.__data_available:
                     time.sleep(0.1)
                     continue
@@ -75,12 +77,17 @@ class LidarTeleop(object):
 
                 self.__rate.sleep()
 
-        finally:
-            # Stop robot when stopped
-            rospy.loginfo("Sending stop value")
-            for i in range(5):
-                self.__vel_pub.publish(new_twist(0, 0))
-            rospy.sleep(1)
+        except KeyboardInterrupt:
+            # This will prevent callstack dump on exit with ctrl-C
+            pass
+
+    def stop(self):
+        self.__stopped = True
+
+    def send_stop(self):
+        # Stop robot when stopped
+        rospy.loginfo("Sending stop value")
+        self.__vel_pub.publish(new_twist(0, 0))
 
 
 if __name__ == '__main__':
@@ -90,6 +97,7 @@ if __name__ == '__main__':
                           cli.stop_angle,
                           cli.publish_rate,
                           cli.centroid_topic,
+                          cli.vel_topic,
                           cli.log_level)
 
     # Setup logging
@@ -97,17 +105,23 @@ if __name__ == '__main__':
 
     rospy.init_node('teleop_node')
 
+    teleop = LidarTeleop(max_linear=args[MAX_LINEAR],
+                         max_angular=args[MAX_ANGULAR],
+                         full_stop_angle=args[STOP_ANGLE],
+                         publish_rate=args[PUBLISH_RATE],
+                         centroid_topic=args[CENTROID_TOPIC],
+                         vel_topic=args[VEL_TOPIC])
+
     rospy.loginfo("Running")
 
     try:
-        teleop = LidarTeleop(max_linear=args[MAX_LINEAR],
-                             max_angular=args[MAX_ANGULAR],
-                             full_stop_angle=args[STOP_ANGLE],
-                             publish_rate=args[PUBLISH_RATE],
-                             centroid_topic=args[CENTROID_TOPIC],
-                             vel_topic=args[VEL_TOPIC])
-        teleop.perform_teleop()
+        # Running this in a thread will enable ctrl-C exits
+        Thread(target=teleop.perform_teleop).start()
+        rospy.spin()
     except KeyboardInterrupt:
         pass
+    finally:
+        teleop.stop()
+        teleop.send_stop()
 
     rospy.loginfo("Exiting")
