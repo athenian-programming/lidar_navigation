@@ -2,6 +2,11 @@
 
 ## Setup
 
+Clone the *lidar_navigation* repo into *~/catkin_ws* with:
+```bash
+$ git clone https://github.com/athenian-robotics/lidar_navigation.git
+```
+
 Install the required python modules with:
 ```bash
 $ pip install -r requirements.txt
@@ -10,7 +15,7 @@ $ pip install -r requirements.txt
 Compile the ROS support for InnerCountour messages with:
 ```bash
 $ cd ~/catkin_ws
-$ catlin_make
+$ catkin_make
 ```
 
 ## Start a Turtlebot3
