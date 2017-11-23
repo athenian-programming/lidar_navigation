@@ -4,11 +4,13 @@
 
 Clone the *lidar_navigation* repo into *~/catkin_ws* with:
 ```bash
+$ cd ~/catkin_ws/src
 $ git clone https://github.com/athenian-robotics/lidar_navigation.git
 ```
 
 Install the required python modules with:
 ```bash
+$ cd ~/catkin_ws/src/lidar_navigation
 $ pip install -r requirements.txt
 ```
 
