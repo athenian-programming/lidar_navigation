@@ -163,7 +163,7 @@ if __name__ == '__main__':
     rospy.loginfo("Running")
 
     try:
-        # Running this in a thread will enable ctrl-C exits
+        # Running this in a thread will enable Ctrl+C exits
         Thread(target=image.generate_image).start()
         rospy.spin()
     except KeyboardInterrupt:

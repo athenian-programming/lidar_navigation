@@ -41,7 +41,7 @@ Add a maze model to the empty TurtleBot3 world with:
 1) Click on the *Insert* tab
 2) Click on one of the models under *~/catkin_ws/src/lidar_navigation/models*
 3) Align the maze model with the TurtleBot3 model
-4) Orient the screen with *ctrl-shift* mouse movements
+4) Orient the screen with *Ctrl+Shift* mouse movements
 
 ## Launch Nodes
 
@@ -49,8 +49,8 @@ Launch the lidar navigation nodes with:
 ```bash
 # On Ubuntu PC
 $ rosrun lidar_navigation geometry_node.py
-$ rosrun lidar_navigation teleop_node.py
 $ rosrun lidar_navigation image_node.py --plot_all
+$ rosrun lidar_navigation teleop_node.py
 ```
 
 Stop a crashed robot with: 
@@ -61,7 +61,16 @@ $ roslaunch lidar_navigation stop_node.py
 **Warning**: Stop the *teleop_node.py* node before running the *stop_node.py* node. 
 
 After stopping a crashed robot, reset the robot to the original starting position 
-with *ctrl-R*.
+with *Ctrl+R*.
+
+## Manual robot control
+Launch keyboard teleop control with: 
+```bash
+# On Ubuntu PC
+$ roslaunch turtlebot3_teleop turtlebot3_teleop_key.launch
+```
+**Warning**: Do not run *turtlebot3_teleop_key.launch* at the same time as  *teleop_node.py*. 
+
 
 ## Node CLI Options
 

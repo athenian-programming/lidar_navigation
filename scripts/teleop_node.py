@@ -78,7 +78,7 @@ class LidarTeleop(object):
                 self.__rate.sleep()
 
         except KeyboardInterrupt:
-            # This will prevent callstack dump on exit with ctrl-C
+            # This will prevent callstack dump on exit with Ctrl+C
             pass
 
     def stop(self):
@@ -115,7 +115,7 @@ if __name__ == '__main__':
     rospy.loginfo("Running")
 
     try:
-        # Running this in a thread will enable ctrl-C exits
+        # Running this in a thread will enable Ctrl+C exits
         Thread(target=teleop.perform_teleop).start()
         rospy.spin()
     except KeyboardInterrupt:
