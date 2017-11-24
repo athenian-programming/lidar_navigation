@@ -17,7 +17,7 @@ import time
 import cli_args  as cli
 from constants import LOG_LEVEL
 from cli_args import setup_cli_args
-from constants import HTTP_DELAY_SECS, HTTP_HOST, HTTP_FILE, HTTP_VERBOSE
+from constants import HTTP_DELAY_SECS, HTTP_HOST, TEMPLATE_FILE, HTTP_VERBOSE
 from constants import PLOT_ALL, PLOT_CONTOUR, PLOT_POINTS, PLOT_SLICES, PLOT_MULT
 from image_server import ImageServer
 from utils import setup_logging
@@ -147,7 +147,7 @@ if __name__ == '__main__':
 
     rospy.init_node('contour_node')
 
-    image_server = ImageServer(template_file=args[HTTP_FILE],
+    image_server = ImageServer(template_file=args[TEMPLATE_FILE],
                                http_host=args[HTTP_HOST],
                                http_delay_secs=args[HTTP_DELAY_SECS],
                                http_verbose=args[HTTP_VERBOSE])

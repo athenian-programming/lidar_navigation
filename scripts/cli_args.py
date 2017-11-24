@@ -2,7 +2,7 @@ import argparse
 import logging
 
 from constants import CENTROID_TOPIC, CENTROID_TOPIC_DEFAULT, PC_TOPIC, PC_TOPIC_DEFAULT
-from constants import HTTP_DELAY_SECS, HTTP_FILE, LOG_LEVEL, HTTP_HOST, HTTP_VERBOSE
+from constants import HTTP_DELAY_SECS, TEMPLATE_FILE, LOG_LEVEL, HTTP_HOST, HTTP_VERBOSE
 from constants import HTTP_DELAY_SECS_DEFAULT, HTTP_HOST_DEFAULT, HTTP_TEMPLATE_DEFAULT
 from constants import MAX_LINEAR, MAX_LINEAR_DEFAULT, MAX_ANGULAR, MAX_ANGULAR_DEFAULT
 from constants import PLOT_ALL, PLOT_CONTOUR, PLOT_POINTS, PLOT_SLICES
@@ -33,9 +33,9 @@ def http_delay_secs(p):
                           help="HTTP delay secs [{0}]".format(HTTP_DELAY_SECS_DEFAULT))
 
 
-def http_file(p):
-    return p.add_argument("--file", "--http_file", dest=HTTP_FILE, default=HTTP_TEMPLATE_DEFAULT,
-                          help="HTTP template file [{}]".format(HTTP_TEMPLATE_DEFAULT))
+def template_file(p):
+    return p.add_argument("--file", "--template_file", dest=TEMPLATE_FILE, default=HTTP_TEMPLATE_DEFAULT,
+                          help="Template file name [{}]".format(HTTP_TEMPLATE_DEFAULT))
 
 
 def http_verbose(p):

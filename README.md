@@ -102,8 +102,13 @@ with *ctrl-R*.
 | --plot_slices    | Plot slices                                        | false          |
 | --plot_mult      | Maximum plot multiplier                            | 1.05           |
 | --contour_topic  | InnerContour value topic name                      | /contour       |
+| --template_file  | Template file name                                 | /html/plot-image.html |
+| --http           | HTTP hostname:port                                 | localhost:8080 |
+| --http_delay     | HTTP delay secs                                    | 0              |
+| --http_verbose   | Enable verbose HTTP log                            | false          |
 | --verbose        | Enable debugging info                              | false          |
 | -h, --help       | Summary of options                                 |                |
+
 
 ## RViz
 

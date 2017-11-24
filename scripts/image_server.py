@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 
 class ImageServer(object):
-    args = [cli.http_file, cli.http_host, cli.http_delay_secs, cli.http_verbose]
+    args = [cli.template_file, cli.http_host, cli.http_delay_secs, cli.http_verbose]
 
     def __init__(self,
                  template_file,

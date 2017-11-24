@@ -10,7 +10,7 @@ HTTP_HOST_DEFAULT = "localhost:{0}".format(HTTP_PORT_DEFAULT)
 HTTP_DELAY_SECS_DEFAULT = 0
 
 HTTP_HOST = "http_host"
-HTTP_FILE = "http_file"
+TEMPLATE_FILE = "template_file"
 HTTP_DELAY_SECS = "http_delay_secs"
 HTTP_VERBOSE = "http_verbose"
 LOG_LEVEL = "loglevel"
