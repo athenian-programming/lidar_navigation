@@ -79,6 +79,7 @@ $ roslaunch turtlebot3_teleop turtlebot3_teleop_key.launch
 | Option           | Description                                        | Default        |
 |:-----------------|----------------------------------------------------|----------------|
 | --slice_size     | Slice size degrees                                 | 5              |
+| --slice_offset   | Slice offset                                       | 0              |
 | --max_mult       | Maximum distance multiplier                        | 1.1            |
 | --publish_rate   | Publish rate                                       | 30             |
 | --scan_topic     | LaserScan values topic name                        | /scan          |
@@ -108,6 +109,7 @@ $ roslaunch turtlebot3_teleop turtlebot3_teleop_key.launch
 | --plot_all       | Plot all items                                     | false          |
 | --plot_points    | Plot points                                        | false          |
 | --plot_contour   | Plot contour                                       | false          |
+| --plot_centroid  | Plot centroid                                      | false          |
 | --plot_slices    | Plot slices                                        | false          |
 | --plot_mult      | Maximum plot multiplier                            | 1.05           |
 | --contour_topic  | InnerContour value topic name                      | /contour       |
