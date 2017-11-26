@@ -16,6 +16,7 @@ HTTP_VERBOSE = "http_verbose"
 LOG_LEVEL = "loglevel"
 
 SLICE_SIZE = "slice_size"
+SLICE_OFFSET = "slice_offset"
 MAX_MULT = "max_mult"
 MAX_MULT_DEFAULT = 1.1
 SLICE_SIZE_DEFAULT = 5
@@ -35,6 +36,7 @@ PLOT_MULT_DEFAULT = 1.05
 
 PLOT_ALL = "plot_all"
 PLOT_CONTOUR = "plot_contour"
+PLOT_CENTROID = "plot_centroid"
 PLOT_POINTS = "plot_points"
 PLOT_SLICES = "plot_slices"
 
@@ -42,6 +44,7 @@ PUBLISH_PC = "publish_pc"
 
 MAX_LINEAR = "max_linear"
 MAX_LINEAR_DEFAULT = .35
+
 MAX_ANGULAR = "max_angular"
 MAX_ANGULAR_DEFAULT = 2.75
 
