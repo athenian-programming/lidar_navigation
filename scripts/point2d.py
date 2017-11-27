@@ -7,7 +7,7 @@ class Point2D(object):
     def __init__(self, x, y):
         self.__x = float(x)
         self.__y = float(y)
-        self.__dist = math.sqrt(self.__x ** 2 + self.__y ** 2)
+        self.__dist = math.hypot(self.__x, self.__y)
 
         if self.__x == 0:
             self.__angle = 90.0
