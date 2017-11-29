@@ -10,9 +10,10 @@ from geometry_msgs.msg import Twist
 
 import cli_args  as cli
 from cli_args import setup_cli_args
+from constants import CENTROID_TOPIC_DEFAULT, VEL_TOPIC_DEFAULT
 from constants import LOG_LEVEL
-from constants import MAX_LINEAR, MAX_ANGULAR, CENTROID_TOPIC
-from constants import VEL_TOPIC, STOP_ANGLE, PUBLISH_RATE
+from constants import MAX_LINEAR, MAX_ANGULAR, CENTROID_TOPIC, STOP_ANGLE_DEFAULT, PUBLISH_RATE_DEFAULT
+from constants import VEL_TOPIC, STOP_ANGLE, PUBLISH_RATE, MAX_LINEAR_DEFAULT, MAX_ANGULAR_DEFAULT
 from point2d import Point2D
 from utils import new_twist
 from utils import setup_logging
@@ -20,19 +21,19 @@ from utils import setup_logging
 
 class LidarTeleop(object):
     def __init__(self,
-                 max_linear=.35,
-                 max_angular=2.75,
-                 full_stop_angle=70,
-                 publish_rate=30,
-                 vel_topic="/cmd_vel",
-                 centroid_topic="/centroid"):
+                 max_linear=MAX_LINEAR_DEFAULT,
+                 max_angular=MAX_ANGULAR_DEFAULT,
+                 full_stop_angle=STOP_ANGLE_DEFAULT,
+                 publish_rate=PUBLISH_RATE_DEFAULT,
+                 vel_topic=VEL_TOPIC_DEFAULT,
+                 centroid_topic=CENTROID_TOPIC_DEFAULT):
         self.__max_linear = max_linear
         self.__max_angular = max_angular
         self.__full_stop_angle = full_stop_angle
 
         self.__rate = rospy.Rate(publish_rate)
         self.__curr_vals_lock = Lock()
-        self.__curr_centroid = None
+        self.__curr_msg = None
         self.__data_available = False
         self.__stopped = False
 
@@ -40,11 +41,11 @@ class LidarTeleop(object):
         self.__vel_pub = rospy.Publisher(vel_topic, Twist, queue_size=5)
 
         rospy.loginfo("Subscribing to Point topic {}".format(centroid_topic))
-        self.__scan_sub = rospy.Subscriber(centroid_topic, Point, self.on_centroid)
+        self.__scan_sub = rospy.Subscriber(centroid_topic, Point, self.on_msg)
 
-    def on_centroid(self, centroid):
+    def on_msg(self, centroid_msg):
         with self.__curr_vals_lock:
-            self.__curr_centroid = centroid
+            self.__curr_msg = centroid_msg
             self.__data_available = True
 
     def perform_teleop(self):
@@ -55,9 +56,11 @@ class LidarTeleop(object):
                     continue
 
                 with self.__curr_vals_lock:
-                    # Convert the centroid from a ROS Point to a Point2D
-                    centroid = Point2D(self.__curr_centroid.x, self.__curr_centroid.y)
+                    centroid_msg = self.__curr_msg
                     self.__data_available = False
+
+                # Convert the centroid from a ROS Point to a Point2D
+                centroid = Point2D(centroid_msg.x, centroid_msg.y)
 
                 # Calculate the linear and angular values proportional to the heading
                 # In effect, slow down linear and speed up angular if a wide angle turn is necessary
