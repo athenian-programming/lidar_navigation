@@ -9,7 +9,7 @@ $ cd ~/catkin_ws/src
 $ git clone https://github.com/athenian-robotics/lidar_navigation.git
 ```
 
-Install the required python modules with:
+Install the required python packages with:
 ```bash
 # On Ubuntu PC
 $ cd ~/catkin_ws/src/lidar_navigation
