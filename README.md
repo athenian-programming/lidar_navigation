@@ -120,7 +120,7 @@ $ roslaunch turtlebot3_teleop turtlebot3_teleop_key.launch
 | --max_plot_mult  | Maximum plot multiplier                            | 1.05           |
 | --contour_topic  | Contour value topic name                           | /contour       |
 | --template_file  | Template file name                                 | /html/plot-image.html |
-| --http           | HTTP hostname:port                                 | localhost:8080 |
+| -p, --port       | HTTP port                                          | 8080           |
 | --http_delay     | HTTP delay secs                                    | 0              |
 | --http_verbose   | Enable verbose HTTP log                            | false          |
 | --verbose        | Enable debugging info                              | false          |
@@ -141,7 +141,7 @@ $ roslaunch turtlebot3_teleop turtlebot3_teleop_key.launch
 | --max_plot_mult  | Maximum plot multiplier                            | 1.05           |
 | --contour_topic  | Contour value topic name                           | /contour       |
 | --template_file  | Template file name                                 | /html/plot-image.html |
-| --http           | HTTP hostname:port                                 | localhost:8080 |
+| -p, --port       | HTTP port                                          | 8080           |
 | --http_delay     | HTTP delay secs                                    | 0              |
 | --http_verbose   | Enable verbose HTTP log                            | false          |
 | --verbose        | Enable debugging info                              | false          |

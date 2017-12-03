@@ -11,7 +11,7 @@ from flask import request
 from werkzeug.wrappers import Response
 
 import cli_args  as cli
-from constants import HTTP_HOST_DEFAULT, HTTP_DELAY_SECS_DEFAULT, HTTP_PORT_DEFAULT
+from constants import HTTP_DELAY_SECS_DEFAULT, HTTP_PORT_DEFAULT
 
 # Find where this package is installed
 _image_fname = "/image.jpg"
@@ -20,20 +20,16 @@ logger = logging.getLogger(__name__)
 
 
 class ImageServer(object):
-    args = [cli.template_file, cli.http_host, cli.http_delay_secs, cli.http_verbose]
+    args = [cli.template_file, cli.http_port, cli.http_delay_secs, cli.http_verbose]
 
     def __init__(self,
                  template_file,
-                 http_host=HTTP_HOST_DEFAULT,
+                 http_port=HTTP_PORT_DEFAULT,
                  http_delay_secs=HTTP_DELAY_SECS_DEFAULT,
                  http_verbose=False):
         self.__template_file = template_file
-        self.__http_host = http_host
+        self.__http_port = http_port
         self.__http_delay_secs = http_delay_secs
-
-        vals = self.__http_host.split(":")
-        self.__host = vals[0]
-        self.__port = vals[1] if len(vals) == 2 else HTTP_PORT_DEFAULT
 
         self.__current_image_lock = Lock()
         self.__current_image = None
@@ -55,10 +51,6 @@ class ImageServer(object):
             logging.getLogger('werkzeug').addFilter(FlaskFilter(_image_fname))
 
     @property
-    def enabled(self):
-        return len(self.__http_host) > 0
-
-    @property
     def image(self):
         with self.__current_image_lock:
             if self.__current_image is None:
@@ -68,9 +60,6 @@ class ImageServer(object):
 
     @image.setter
     def image(self, image):
-        if not self.enabled:
-            return
-
         # Wait until potential sleep in start() has completed
         if not self.__ready_to_serve:
             return
@@ -145,15 +134,15 @@ class ImageServer(object):
                     rospy.loginfo("HTTP server shutdown")
 
         # Run HTTP server in a thread
-        Thread(target=run_http, kwargs={"flask_server": flask, "host": self.__host, "port": self.__port}).start()
+        Thread(target=run_http, kwargs={"flask_server": flask, "host": "0.0.0.0", "port": self.__http_port}).start()
         self.__flask_launched = True
-        rospy.loginfo("Running HTTP server on http://%s:%s/", self.__host, self.__port)
+        rospy.loginfo("Running HTTP server listening on port %d", self.__http_port)
 
     def _start(self):
         # Cannot start the flask server until the dimensions of the image are known
         # So do not fire up the thread until the first image is available
         rospy.loginfo("Using template file %s", self.__template_file)
-        rospy.loginfo("Starting HTTP server on http://%s:%s/", self.__host, self.__port)
+        rospy.loginfo("Starting HTTP server listening on port %d", self.__http_port)
         self.__ready_to_serve = True
         self.__started = True
 
@@ -162,7 +151,7 @@ class ImageServer(object):
             rospy.logerror("ImageServer.start() already called")
             return
 
-        if self.__flask_launched or not self.enabled:
+        if self.__flask_launched:
             return
 
         rospy.loginfo("Starting ImageServer")
@@ -173,7 +162,7 @@ class ImageServer(object):
             return
 
         self.__ready_to_stop = True
-        url = "http://{0}:{1}".format(self.__host, self.__port)
+        url = "http://localhost:{0}".format(self.__http_port)
         rospy.loginfo("Shutting down %s", url)
 
         try:

@@ -2,8 +2,8 @@ import argparse
 import logging
 
 from constants import CENTROID_TOPIC, CENTROID_TOPIC_DEFAULT, PC_TOPIC, PC_TOPIC_DEFAULT
-from constants import HTTP_DELAY_SECS, TEMPLATE_FILE, LOG_LEVEL, HTTP_HOST, HTTP_VERBOSE
-from constants import HTTP_DELAY_SECS_DEFAULT, HTTP_HOST_DEFAULT, HTTP_TEMPLATE_DEFAULT
+from constants import HTTP_DELAY_SECS, TEMPLATE_FILE, LOG_LEVEL, HTTP_PORT, HTTP_VERBOSE
+from constants import HTTP_DELAY_SECS_DEFAULT, HTTP_PORT_DEFAULT, HTTP_TEMPLATE_DEFAULT
 from constants import MAX_LINEAR, MAX_LINEAR_DEFAULT, MAX_ANGULAR, MAX_ANGULAR_DEFAULT
 from constants import PAUSE, ITERATIONS, ITERATIONS_DEFAULT, MIN_POINTS, MIN_POINTS_DEFAULT
 from constants import PLOT_ALL, PLOT_CONTOUR, PLOT_CENTROID, PLOT_POINTS, PLOT_SLICES
@@ -25,9 +25,9 @@ def setup_cli_args(*args):
     return vars(parser.parse_args())
 
 
-def http_host(p):
-    return p.add_argument("--http", dest=HTTP_HOST, default=HTTP_HOST_DEFAULT,
-                          help="HTTP hostname:port [{0}]".format(HTTP_HOST_DEFAULT))
+def http_port(p):
+    return p.add_argument("-p", "--port", dest=HTTP_PORT, default=HTTP_PORT_DEFAULT,
+                          help="HTTP port [{0}]".format(HTTP_PORT_DEFAULT))
 
 
 def http_delay_secs(p):
