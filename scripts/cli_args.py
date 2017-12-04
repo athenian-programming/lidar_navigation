@@ -26,7 +26,7 @@ def setup_cli_args(*args):
 
 
 def http_port(p):
-    return p.add_argument("-p", "--port", dest=HTTP_PORT, default=HTTP_PORT_DEFAULT,
+    return p.add_argument("-p", "--port", dest=HTTP_PORT, default=HTTP_PORT_DEFAULT, type=int,
                           help="HTTP port [{0}]".format(HTTP_PORT_DEFAULT))
 
 
