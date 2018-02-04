@@ -24,7 +24,7 @@ from constants import MIN_POINTS_DEFAULT, CONTOUR_TOPIC_DEFAULT, MAX_AXIS_MULT_D
 from image_server import ImageServer
 from utils import setup_logging
 from lidar_navigation.msg import Contour
-from scripts.common.point2d import Point2D
+from scripts.point2d import Point2D
 from wall_finder import WallFinder
 
 

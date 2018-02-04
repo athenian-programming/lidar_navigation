@@ -20,8 +20,8 @@ from constants import LOG_LEVEL, SLICE_OFFSET_DEFAULT, MAX_DIST_MULT_DEFAULT, PU
 from constants import SCAN_TOPIC, CONTOUR_TOPIC, CENTROID_TOPIC, PC_TOPIC, SLICE_SIZE_DEFAULT
 from constants import SCAN_TOPIC_DEFAULT, CONTOUR_TOPIC_DEFAULT, CENTROID_TOPIC_DEFAULT, PC_TOPIC_DEFAULT
 from constants import SLICE_SIZE, SLICE_OFFSET, MAX_DIST_MULT, PUBLISH_PC, PUBLISH_RATE, PUBLISH_RATE_DEFAULT
-from scripts.common.point2d import Origin
-from scripts.common.point2d import Point2D
+from scripts.point2d import Origin
+from scripts.point2d import Point2D
 from slice import Slice
 from utils import setup_logging
 

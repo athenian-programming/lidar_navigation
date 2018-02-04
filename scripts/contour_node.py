@@ -23,8 +23,8 @@ from constants import MAX_AXIS_MULT_DEFAULT, CONTOUR_TOPIC_DEFAULT
 from image_server import ImageServer
 from utils import setup_logging
 from lidar_navigation.msg import Contour
-from scripts.common.point2d import Point2D
-from scripts.common.point2d import Origin
+from scripts.point2d import Point2D
+from scripts.point2d import Origin
 from slice import Slice
 
 
