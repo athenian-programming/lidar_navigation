@@ -5,22 +5,22 @@
 Clone the *lidar_navigation* repo into *~/catkin_ws/src* with:
 ```bash
 # On Ubuntu PC
-$ cd ~/catkin_ws/src
-$ git clone https://github.com/athenian-robotics/lidar_navigation.git
+cd ~/catkin_ws/src
+git clone https://github.com/athenian-robotics/lidar_navigation.git
 ```
 
 Install the required python packages with:
 ```bash
 # On Ubuntu PC
-$ cd ~/catkin_ws/src/lidar_navigation
-$ pip install -r requirements.txt
+cd ~/catkin_ws/src/lidar_navigation
+pip install -r requirements.txt
 ```
 
 Compile the ROS support for Contour messages with:
 ```bash
 # On Ubuntu PC
-$ cd ~/catkin_ws
-$ catkin_make
+cd ~/catkin_ws
+catkin_make
 ```
 
 ## Start a Turtlebot3
@@ -28,13 +28,13 @@ $ catkin_make
 Start a physical Turtlebot3 with:
 ```bash
 # On TurtleBot3
-$ roslaunch turtlebot3_bringup turtlebot3_robot.launch 
+roslaunch turtlebot3_bringup turtlebot3_robot.launch 
 ```
 
 Start a simulated TurtleBot3 in Gazebo with:
 ```bash
 # On Ubuntu PC
-$ roslaunch turtlebot3_gazebo turtlebot3_empty_world.launch 
+roslaunch turtlebot3_gazebo turtlebot3_empty_world.launch 
 ```
 
 Add a maze model to the empty TurtleBot3 world with:
@@ -49,19 +49,19 @@ Launch the lidar navigation nodes with:
 ```bash
 # On Ubuntu PC
 # To publish the interpretation of the lidar data 
-$ rosrun lidar_navigation geometry_node.py
+rosrun lidar_navigation geometry_node.py
 # To drive the robot
-$ rosrun lidar_navigation teleop_node.py
+rosrun lidar_navigation teleop_node.py
 # To view the contour and centroid data
-$ rosrun lidar_navigation contour_node.py --plot_all
+rosrun lidar_navigation contour_node.py --plot_all
 # To view the walls data
-$ rosrun lidar_navigation walls_node.py --plot_all
+rosrun lidar_navigation walls_node.py --plot_all
 ```
 
 Stop a crashed physical Turtlebot3 with: 
 ```bash
 # On Ubuntu PC
-$ roslaunch lidar_navigation stop_node.py
+roslaunch lidar_navigation stop_node.py
 ```
 **Warning**: Stop the *teleop_node.py* node before running the *stop_node.py* node. 
 
@@ -72,7 +72,7 @@ with *Ctrl+R* and restart the *geometry_node*.
 Launch keyboard teleop control with: 
 ```bash
 # On Ubuntu PC
-$ roslaunch turtlebot3_teleop turtlebot3_teleop_key.launch
+roslaunch turtlebot3_teleop turtlebot3_teleop_key.launch
 ```
 **Warning**: Do not run *turtlebot3_teleop_key.launch* at the same time as  *teleop_node.py*. 
 
@@ -153,7 +153,7 @@ $ roslaunch turtlebot3_teleop turtlebot3_teleop_key.launch
 Launch RViz viewer to view */scan* and */pc2* values with: 
 ```bash
 # On Ubuntu PC
-$ roslaunch turtlebot3_bringup turtlebot3_model.launch
+roslaunch turtlebot3_bringup turtlebot3_model.launch
 ```
 
 ## Creating a maze with gzmaze
