@@ -14,14 +14,15 @@ from threading import Thread
 
 import rospy
 import time
-import cli_args  as cli
-from constants import LOG_LEVEL
-from cli_args import setup_cli_args
-from constants import HTTP_DELAY_SECS, HTTP_PORT, TEMPLATE_FILE, HTTP_VERBOSE
-from constants import PLOT_ALL, PLOT_CONTOUR, PLOT_CENTROID, PLOT_POINTS, PLOT_SLICES, MAX_AXIS_MULT
-from constants import MAX_AXIS_MULT_DEFAULT, CONTOUR_TOPIC_DEFAULT
-from image_server import ImageServer
-from utils import setup_logging
+import arc852.cli_args  as cli
+import lidar_cli_args  as lidar_cli
+from arc852.constants import LOG_LEVEL
+from arc852.cli_args import setup_cli_args
+from arc852.constants import HTTP_DELAY_SECS, HTTP_PORT, TEMPLATE_FILE, HTTP_VERBOSE
+from lidar_constants import PLOT_ALL, PLOT_CONTOUR, PLOT_CENTROID, PLOT_POINTS, PLOT_SLICES, MAX_AXIS_MULT
+from lidar_constants import MAX_AXIS_MULT_DEFAULT, CONTOUR_TOPIC_DEFAULT
+from arc852.image_server_nohost import ImageServer
+from arc852.utils import setup_logging
 from lidar_navigation.msg import Contour
 from scripts.point2d import Point2D
 from scripts.point2d import Origin
@@ -127,15 +128,15 @@ class LidarImage(object):
         self.__stopped = True
 
 
-if __name__ == '__main__':
+def main():
     # Parse CLI args
-    args = setup_cli_args(cli.plot_all,
-                          cli.plot_points,
-                          cli.plot_contour,
-                          cli.plot_centroid,
-                          cli.plot_slices,
-                          cli.max_axis_mult,
-                          cli.contour_topic,
+    args = setup_cli_args(lidar_cli.plot_all,
+                          lidar_cli.plot_points,
+                          lidar_cli.plot_contour,
+                          lidar_cli.plot_centroid,
+                          lidar_cli.plot_slices,
+                          lidar_cli.max_axis_mult,
+                          lidar_cli.contour_topic,
                           ImageServer.args,
                           cli.log_level)
 
@@ -147,7 +148,10 @@ if __name__ == '__main__':
     image_server = ImageServer(template_file=args[TEMPLATE_FILE],
                                http_port=args[HTTP_PORT],
                                http_delay_secs=args[HTTP_DELAY_SECS],
-                               http_verbose=args[HTTP_VERBOSE])
+                               http_verbose=args[HTTP_VERBOSE],
+                               log_info=rospy.loginfo,
+                               log_debug=rospy.logdebug,
+                               log_error=rospy.logerror)
 
     image_server.start()
     image = LidarImage(image_server=image_server,
@@ -171,3 +175,7 @@ if __name__ == '__main__':
         image_server.stop()
 
     rospy.loginfo("Exiting")
+
+
+if __name__ == '__main__':
+    main()

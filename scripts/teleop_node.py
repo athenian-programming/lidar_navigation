@@ -4,19 +4,20 @@ import time
 from threading import Lock
 from threading import Thread
 
+import arc852.cli_args  as cli
 import rospy
+from arc852.cli_args import setup_cli_args
+from arc852.constants import LOG_LEVEL
+from arc852.ros_utils import new_twist
+from arc852.utils import setup_logging
 from geometry_msgs.msg import Point
 from geometry_msgs.msg import Twist
 
-import cli_args  as cli
-from cli_args import setup_cli_args
-from constants import CENTROID_TOPIC_DEFAULT, VEL_TOPIC_DEFAULT
-from constants import LOG_LEVEL
-from constants import MAX_LINEAR, MAX_ANGULAR, CENTROID_TOPIC, STOP_ANGLE_DEFAULT, PUBLISH_RATE_DEFAULT
-from constants import VEL_TOPIC, STOP_ANGLE, PUBLISH_RATE, MAX_LINEAR_DEFAULT, MAX_ANGULAR_DEFAULT
+import lidar_cli_args  as lidar_cli
+from lidar_constants import CENTROID_TOPIC_DEFAULT, VEL_TOPIC_DEFAULT
+from lidar_constants import MAX_LINEAR, MAX_ANGULAR, CENTROID_TOPIC, STOP_ANGLE_DEFAULT, PUBLISH_RATE_DEFAULT
+from lidar_constants import VEL_TOPIC, STOP_ANGLE, PUBLISH_RATE, MAX_LINEAR_DEFAULT, MAX_ANGULAR_DEFAULT
 from scripts.point2d import Point2D
-from utils import new_twist
-from utils import setup_logging
 
 
 class LidarTeleop(object):
@@ -93,14 +94,14 @@ class LidarTeleop(object):
         self.__vel_pub.publish(new_twist(0, 0))
 
 
-if __name__ == '__main__':
+def main():
     # Parse CLI args
-    args = setup_cli_args(cli.max_linear,
-                          cli.max_angular,
-                          cli.stop_angle,
-                          cli.publish_rate,
-                          cli.centroid_topic,
-                          cli.vel_topic,
+    args = setup_cli_args(lidar_cli.max_linear,
+                          lidar_cli.max_angular,
+                          lidar_cli.stop_angle,
+                          lidar_cli.publish_rate,
+                          lidar_cli.centroid_topic,
+                          lidar_cli.vel_topic,
                           cli.log_level)
 
     # Setup logging
@@ -128,3 +129,7 @@ if __name__ == '__main__':
         teleop.send_stop()
 
     rospy.loginfo("Exiting")
+
+
+if __name__ == '__main__':
+    main()

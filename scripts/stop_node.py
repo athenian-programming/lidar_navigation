@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 
+import arc852.cli_args  as cli
 import rospy
+from arc852.cli_args import setup_cli_args
+from arc852.constants import LOG_LEVEL
+from arc852.ros_utils import new_twist
+from arc852.utils import setup_logging
 from geometry_msgs.msg import Twist
 
-import cli_args  as cli
-from cli_args import setup_cli_args
-from constants import LOG_LEVEL
-from utils import new_twist
-from utils import setup_logging
 
-if __name__ == '__main__':
+def main():
     # Parse CLI args
     args = setup_cli_args(cli.log_level)
 
@@ -30,3 +30,7 @@ if __name__ == '__main__':
     rospy.sleep(1)
 
     rospy.loginfo("Exiting")
+
+
+if __name__ == '__main__':
+    main()

@@ -4,9 +4,12 @@ import time
 from threading import Lock
 from threading import Thread
 
+import arc852.cli_args  as cli
 import numpy as np
 import rospy
 import sensor_msgs.point_cloud2 as pc2
+from arc852.cli_args import setup_cli_args
+from arc852.utils import setup_logging
 from geometry_msgs.msg import Point
 from laser_geometry import LaserProjection
 from lidar_navigation.msg import Contour
@@ -14,16 +17,14 @@ from sensor_msgs.msg import LaserScan
 from sensor_msgs.msg import PointCloud2
 from shapely.geometry import Polygon
 
-import cli_args  as cli
-from cli_args import setup_cli_args
-from constants import LOG_LEVEL, SLICE_OFFSET_DEFAULT, MAX_DIST_MULT_DEFAULT, PUBLISH_PC_DEFAULT
-from constants import SCAN_TOPIC, CONTOUR_TOPIC, CENTROID_TOPIC, PC_TOPIC, SLICE_SIZE_DEFAULT
-from constants import SCAN_TOPIC_DEFAULT, CONTOUR_TOPIC_DEFAULT, CENTROID_TOPIC_DEFAULT, PC_TOPIC_DEFAULT
-from constants import SLICE_SIZE, SLICE_OFFSET, MAX_DIST_MULT, PUBLISH_PC, PUBLISH_RATE, PUBLISH_RATE_DEFAULT
+import lidar_cli_args  as lidar_cli
+from lidar_constants import LOG_LEVEL, SLICE_OFFSET_DEFAULT, MAX_DIST_MULT_DEFAULT, PUBLISH_PC_DEFAULT
+from lidar_constants import SCAN_TOPIC, CONTOUR_TOPIC, CENTROID_TOPIC, PC_TOPIC, SLICE_SIZE_DEFAULT
+from lidar_constants import SCAN_TOPIC_DEFAULT, CONTOUR_TOPIC_DEFAULT, CENTROID_TOPIC_DEFAULT, PC_TOPIC_DEFAULT
+from lidar_constants import SLICE_SIZE, SLICE_OFFSET, MAX_DIST_MULT, PUBLISH_PC, PUBLISH_RATE, PUBLISH_RATE_DEFAULT
 from scripts.point2d import Origin
 from scripts.point2d import Point2D
 from slice import Slice
-from utils import setup_logging
 
 
 class LidarGeometry(object):
@@ -152,17 +153,17 @@ class LidarGeometry(object):
         self.__stopped = True
 
 
-if __name__ == '__main__':
+def main():
     # Parse CLI args
-    args = setup_cli_args(cli.slice_size,
-                          cli.slice_offset,
-                          cli.max_dist_mult,
-                          cli.publish_rate,
-                          cli.scan_topic,
-                          cli.contour_topic,
-                          cli.centroid_topic,
-                          cli.publish_pc,
-                          cli.pc_topic,
+    args = setup_cli_args(lidar_cli.slice_size,
+                          lidar_cli.slice_offset,
+                          lidar_cli.max_dist_mult,
+                          lidar_cli.publish_rate,
+                          lidar_cli.scan_topic,
+                          lidar_cli.contour_topic,
+                          lidar_cli.centroid_topic,
+                          lidar_cli.publish_pc,
+                          lidar_cli.pc_topic,
                           cli.log_level)
 
     # Setup logging
@@ -192,3 +193,7 @@ if __name__ == '__main__':
         geometry.stop()
 
     rospy.loginfo("Exiting")
+
+
+if __name__ == '__main__':
+    main()

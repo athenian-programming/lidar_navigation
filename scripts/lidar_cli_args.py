@@ -1,17 +1,15 @@
 import argparse
-import logging
 
-from constants import CENTROID_TOPIC, CENTROID_TOPIC_DEFAULT, PC_TOPIC, PC_TOPIC_DEFAULT
-from constants import HTTP_DELAY_SECS, TEMPLATE_FILE, LOG_LEVEL, HTTP_PORT, HTTP_VERBOSE
-from constants import HTTP_DELAY_SECS_DEFAULT, HTTP_PORT_DEFAULT, HTTP_TEMPLATE_DEFAULT
-from constants import MAX_LINEAR, MAX_LINEAR_DEFAULT, MAX_ANGULAR, MAX_ANGULAR_DEFAULT
-from constants import PAUSE, ITERATIONS, ITERATIONS_DEFAULT, MIN_POINTS, MIN_POINTS_DEFAULT
-from constants import PLOT_ALL, PLOT_CONTOUR, PLOT_CENTROID, PLOT_POINTS, PLOT_SLICES
-from constants import PUBLISH_RATE, PUBLISH_RATE_DEFAULT, MAX_AXIS_MULT, MAX_AXIS_MULT_DEFAULT
-from constants import SCAN_TOPIC, SCAN_TOPIC_DEFAULT, CONTOUR_TOPIC, CONTOUR_TOPIC_DEFAULT
-from constants import SLICE_SIZE, SLICE_SIZE_DEFAULT, SLICE_OFFSET, PUBLISH_PC, MAX_DIST_MULT, MAX_DIST_MULT_DEFAULT
-from constants import THRESHOLD, THRESHOLD_DEFAULT, SLICE_OFFSET_DEFAULT, PAUSE_DEFAULT
-from constants import VEL_TOPIC, VEL_TOPIC_DEFAULT, STOP_ANGLE, STOP_ANGLE_DEFAULT, PUBLISH_PC_DEFAULT
+from lidar_constants import CENTROID_TOPIC, CENTROID_TOPIC_DEFAULT, PC_TOPIC, PC_TOPIC_DEFAULT
+from lidar_constants import MAX_LINEAR, MAX_LINEAR_DEFAULT, MAX_ANGULAR, MAX_ANGULAR_DEFAULT
+from lidar_constants import PAUSE, ITERATIONS, ITERATIONS_DEFAULT, MIN_POINTS, MIN_POINTS_DEFAULT
+from lidar_constants import PLOT_ALL, PLOT_CONTOUR, PLOT_CENTROID, PLOT_POINTS, PLOT_SLICES
+from lidar_constants import PUBLISH_RATE, PUBLISH_RATE_DEFAULT, MAX_AXIS_MULT, MAX_AXIS_MULT_DEFAULT
+from lidar_constants import SCAN_TOPIC, SCAN_TOPIC_DEFAULT, CONTOUR_TOPIC, CONTOUR_TOPIC_DEFAULT
+from lidar_constants import SLICE_SIZE, SLICE_SIZE_DEFAULT, SLICE_OFFSET, PUBLISH_PC, MAX_DIST_MULT, \
+    MAX_DIST_MULT_DEFAULT
+from lidar_constants import THRESHOLD, THRESHOLD_DEFAULT, SLICE_OFFSET_DEFAULT, PAUSE_DEFAULT
+from lidar_constants import VEL_TOPIC, VEL_TOPIC_DEFAULT, STOP_ANGLE, STOP_ANGLE_DEFAULT, PUBLISH_PC_DEFAULT
 
 
 def setup_cli_args(*args):
@@ -23,31 +21,6 @@ def setup_cli_args(*args):
         else:
             arg(parser)
     return vars(parser.parse_args())
-
-
-def http_port(p):
-    return p.add_argument("-p", "--port", dest=HTTP_PORT, default=HTTP_PORT_DEFAULT, type=int,
-                          help="HTTP port [{0}]".format(HTTP_PORT_DEFAULT))
-
-
-def http_delay_secs(p):
-    return p.add_argument("--delay", "--http_delay", dest=HTTP_DELAY_SECS, default=HTTP_DELAY_SECS_DEFAULT, type=float,
-                          help="HTTP delay secs [{0}]".format(HTTP_DELAY_SECS_DEFAULT))
-
-
-def template_file(p):
-    return p.add_argument("--file", "--template_file", dest=TEMPLATE_FILE, default=HTTP_TEMPLATE_DEFAULT,
-                          help="Template file name [{}]".format(HTTP_TEMPLATE_DEFAULT))
-
-
-def http_verbose(p):
-    return p.add_argument("--http_verbose", "--verbose_http", dest=HTTP_VERBOSE, default=False, action="store_true",
-                          help="Enable verbose HTTP log [false]")
-
-
-def log_level(p):
-    return p.add_argument("-v", "--verbose", dest=LOG_LEVEL, default=logging.INFO, action="store_const",
-                          const=logging.DEBUG, help="Enable debugging info")
 
 
 def slice_size(p):
