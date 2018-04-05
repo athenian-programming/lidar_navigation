@@ -12,7 +12,8 @@ import traceback
 
 class WallTracker(object):
 
-    def __init__(self, turn_direction="left"):
+    def __init__(self, turn_direction="left", keeping_distance=3):
+        self.keeping_distance = keeping_distance
         self.turn_direction = turn_direction
 
         rospy.init_node("wall_tracker_node")
@@ -25,6 +26,7 @@ class WallTracker(object):
 
         self.max_linear = 0.5
         self.max_angular = 1
+        self.keeping_distance_adjustment = 0.5
 
         self._interrupt = Event()
 
@@ -74,7 +76,10 @@ class WallTracker(object):
                     linear = 0
                 # heading_angle = -1.0 * closest_point.heading#  + (90 if self.turn_direction == "left" else -90)
 
+                wall_dist_adj = (((self.keeping_distance - closest_point.origin_dist) / self.keeping_distance)
+                                 * self.keeping_distance_adjustment)
 
+                angular += wall_dist_adj
 
                 print("Angle: ", angle_to_closest_point)
                 print("Angular: ", angular)
