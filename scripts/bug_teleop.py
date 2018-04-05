@@ -57,7 +57,7 @@ class WallTracker(object):
 
                 # Optimizing for following the wall and staying a distance from it seems to require two different
                 # forces, almost like two different pressures. They'll probably both get to a point where they
-                # rebo
+                # hopefully resonate against each other.
 
                 closest_point = self._get_closest_point()
                 # Set the desired heading to be perpendicular to the closest point
