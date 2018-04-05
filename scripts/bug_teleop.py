@@ -7,12 +7,14 @@ from std_msgs.msg import Float64
 import numpy as np
 from point2d import Point2D
 from threading import Lock, Event, Thread
+from arc852.pid_controller import PIDControl
 import traceback
 
 
 class WallTracker(object):
 
-    def __init__(self, turn_direction="left", keeping_distance=3):
+    def __init__(self, turn_direction="left", keeping_distance=0.25):
+        # Keeping distance is in meters
         self.keeping_distance = keeping_distance
         self.turn_direction = turn_direction
 
@@ -24,9 +26,13 @@ class WallTracker(object):
         self.contour_lock = Lock()
         self._closest_points = None
 
-        self.max_linear = 0.5
-        self.max_angular = 1
-        self.keeping_distance_adjustment = 0.5
+        self.keeping_pid = PIDControl(2, 0, 0)
+        self.angular_pid = PIDControl(4, 0, 0)
+        self.linear_pid = PIDControl(0.3, 0, 0)
+
+        # self.max_linear = 0.5
+        # self.max_angular = 3
+        # self.keeping_distance_adjustment = 0.5
 
         self._interrupt = Event()
 
@@ -69,35 +75,44 @@ class WallTracker(object):
                 if self.turn_direction == "left":
                     # Scale the angular so we head in the right direction
                     scaling_factor = (-90 - angle_to_closest_point) / 90.0
-                    angular = scaling_factor * self.max_angular
-                    linear = scaling_factor * self.max_linear
+                    # angular = scaling_factor * self.max_angular
+                    # Use PID to bring us close
+                    angular = self.angular_pid.get_pid(scaling_factor)
+                    linear = self.linear_pid.get_pid(abs(scaling_factor))
+                    # linear = scaling_factor * self.max_linear
                 else:
-                    angular = -(90.0 - angle_to_closest_point) / 90.0 * self.max_angular
-                    linear = 0
+                    scaling_factor = -(90.0 - angle_to_closest_point) / 90.0
+                    angular = self.angular_pid.get_pid(scaling_factor)
+                    linear = self.linear_pid.get_pid(abs(scaling_factor))
+                    # linear = 0
                 # heading_angle = -1.0 * closest_point.heading#  + (90 if self.turn_direction == "left" else -90)
 
-                wall_dist_adj = (((self.keeping_distance - closest_point.origin_dist) / self.keeping_distance)
-                                 * self.keeping_distance_adjustment)
+                # Also calculate the distance from the wall
+                wall_dist_adj = self.keeping_pid.get_pid((self.keeping_distance - closest_point.origin_dist) / self.keeping_distance)
 
-                angular += wall_dist_adj
+                print("pre-angular", angular)
+                print("wall adj", wall_dist_adj)
+                # No cleaner way besides just adding them together
+                angular += -wall_dist_adj
 
                 print("Angle: ", angle_to_closest_point)
                 print("Angular: ", angular)
+                print("Current dist to wall: ", closest_point.origin_dist)
+
 
                 twist = Twist()
                 # twist.linear.x = linear
-                twist.linear.x = 0.35
+                linear = 0.35
+                twist.linear.x = min(linear, 5)
                 # if self.turn_direction == "left":
                 #     twist.linear.x = abs(heading_angle) * self.max_linear
                 # else:
                 #     twist.linear.x = abs(180 - heading_angle) * self.max_linear
 
-
-
                 # -1 * ((centroid.heading / 90.0) * self.__max_angular)
                 # twist.angular.z = -1 * heading_angle / 90.0 * self.max_angular
                 twist.angular.z = angular
-                if abs(twist.angular.z) > 0.1:
+                if abs(twist.angular.z) > 0.6:
                     twist.linear.x = 0
                 # elif twist.angular.z < 0.2:
                 #     twist.linear.x = 0.1
@@ -115,6 +130,7 @@ class WallTracker(object):
             Thread(target=self.move).start()
             rospy.spin()
         except KeyboardInterrupt:
+            self.stop()
             exit(0)
 
 
