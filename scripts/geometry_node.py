@@ -23,8 +23,8 @@ from lidar_constants import LOG_LEVEL, SLICE_OFFSET_DEFAULT, MAX_DIST_MULT_DEFAU
 from lidar_constants import SCAN_TOPIC, CONTOUR_TOPIC, CENTROID_TOPIC, PC_TOPIC, SLICE_SIZE_DEFAULT
 from lidar_constants import SCAN_TOPIC_DEFAULT, CONTOUR_TOPIC_DEFAULT, CENTROID_TOPIC_DEFAULT, PC_TOPIC_DEFAULT
 from lidar_constants import SLICE_SIZE, SLICE_OFFSET, MAX_DIST_MULT, PUBLISH_PC, PUBLISH_RATE, PUBLISH_RATE_DEFAULT
-from scripts.point2d import Origin
-from scripts.point2d import Point2D
+from point2d import Origin
+from point2d import Point2D
 from slice import Slice
 
 

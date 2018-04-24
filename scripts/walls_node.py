@@ -26,7 +26,7 @@ from lidar_constants import MIN_POINTS_DEFAULT, CONTOUR_TOPIC_DEFAULT, MAX_AXIS_
 from arc852.image_server_nohost import ImageServer
 from arc852.utils import setup_logging
 from lidar_navigation.msg import Contour
-from scripts.point2d import Point2D
+from point2d import Point2D
 from wall_finder import WallFinder
 
 
