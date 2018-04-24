@@ -1,6 +1,6 @@
 import math
 
-from scripts.point2d import Point2D
+from point2d import Point2D
 
 
 def to_point(rads, dist):

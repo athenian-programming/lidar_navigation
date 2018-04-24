@@ -25,8 +25,8 @@ from lidar_constants import MAX_AXIS_MULT_DEFAULT, CONTOUR_TOPIC_DEFAULT
 from arc852.image_server_nohost import ImageServer
 from arc852.utils import setup_logging
 from lidar_navigation.msg import Contour
-from scripts.point2d import Point2D
-from scripts.point2d import Origin
+from point2d import Point2D
+from point2d import Origin
 from slice import Slice
 
 
