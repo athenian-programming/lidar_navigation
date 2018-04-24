@@ -18,7 +18,7 @@ import lidar_cli_args  as lidar_cli
 from lidar_constants import CENTROID_TOPIC_DEFAULT, VEL_TOPIC_DEFAULT
 from lidar_constants import MAX_LINEAR, MAX_ANGULAR, CENTROID_TOPIC, STOP_ANGLE_DEFAULT, PUBLISH_RATE_DEFAULT
 from lidar_constants import VEL_TOPIC, STOP_ANGLE, PUBLISH_RATE, MAX_LINEAR_DEFAULT, MAX_ANGULAR_DEFAULT
-from scripts.point2d import Point2D
+from point2d import Point2D
 
 
 class LidarTeleop(object):
