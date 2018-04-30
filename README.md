@@ -50,10 +50,13 @@ Launch the lidar navigation nodes with:
 # On Ubuntu PC
 # To publish the interpretation of the lidar data 
 rosrun lidar_navigation geometry_node.py
+
 # To drive the robot
 rosrun lidar_navigation teleop_node.py
+
 # To view the contour and centroid data
 rosrun lidar_navigation contour_node.py --plot_all
+
 # To view the walls data
 rosrun lidar_navigation walls_node.py --plot_all
 ```
